@@ -41,3 +41,28 @@ Existing Implementations:
 - [mlpf](https://github.com/selvaggi/mlpf/blob/main/README.md) [PyTorch]
 - [gnn-tracking](https://github.com/gnn-tracking/gnn_tracking/tree/main)
   [PyTorch]
+
+## Installation
+
+Clone project and run
+
+```bash
+python3 -m pip install -e '.[pytorch]'
+# or
+python3 -m pip install -e '.[tensorflow]'
+```
+
+### Development setup
+
+For the development setup, also add `dev` and `testing`, e.g.,
+
+```bash
+python3 -m pip install -e '.[pytorch,dev,testing]'
+```
+
+Please also install pre-commit:
+
+```bash
+python3 -m pip install pre-commit
+pre-commit install  # in top-level directory of repository
+```
