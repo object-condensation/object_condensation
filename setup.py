@@ -1,8 +1,13 @@
-from setuptools import setup, find_packages
+from pathlib import Path
+from setuptools import find_packages, setup
 
 
-with open('requirements.txt') as f:
+with Path('requirements.txt').open() as f:
     requirements = f.read().splitlines()
+with Path('requirements_tf.txt').open() as f:
+    requirements_tf = f.read().splitlines()
+with Path('requirements_pt.txt').open() as f:
+    requirements_pt = f.read().splitlines()
 
 setup(
     name="object_condensation",
@@ -13,8 +18,8 @@ setup(
     packages=find_packages(),
     install_requires=requirements,
     extras_require={
-        "tf": open("requirements_tf.txt").read().splitlines(),
-        "pt": open("requirements_pt.txt").read().splitlines(),
+        "tf": requirements_tf,
+        "pt": requirements_pt,
     },
 )
 
