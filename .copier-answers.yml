@@ -2,12 +2,13 @@
 _commit: 2023.09.21
 _src_path: gh:scientific-python/cookie
 backend: hatch
-email: kilian.lieret@posteo.de
-full_name: Kilian Lieret
+email: kilian.lieret@posteo.de, philipp.zehetner@cern.ch
+full_name: Kilian Lieret, Philipp Zehetner
 license: MIT
 org: object-condensation
 project_name: object_condensation
-project_short_description: Efficient implementations of the Object Condensation losses
-    (Jan Kieseler, 2020)
+project_short_description:
+  Efficient implementations of the Object Condensation losses (Jan Kieseler,
+  2020)
 url: https://github.com/object-condensation/object_condensation
 vcs: true

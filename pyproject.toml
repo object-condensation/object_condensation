@@ -7,6 +7,7 @@ build-backend = "hatchling.build"
 name = "object_condensation"
 authors = [
   { name = "Kilian Lieret", email = "kilian.lieret@posteo.de" },
+  { name = "Philipp Zehetner", email = "philipp.zehetner@cern.ch" },
 ]
 description = "Efficient implementations of the Object Condensation losses (Jan Kieseler, 2020)"
 readme = "README.md"

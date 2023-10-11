@@ -3,8 +3,8 @@ from __future__ import annotations
 import importlib.metadata
 
 project = "object_condensation"
-copyright = "2023, Kilian Lieret"
-author = "Kilian Lieret"
+copyright = "2023, Kilian Lieret, Philipp Zehetner"
+author = "Kilian Lieret, Philipp Zehetner"
 version = release = importlib.metadata.version("object_condensation")
 
 extensions = [

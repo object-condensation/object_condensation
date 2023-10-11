@@ -1,5 +1,5 @@
 """
-Copyright (c) 2023 Kilian Lieret. All rights reserved.
+Copyright (c) 2023 Kilian Lieret, Philipp Zehetner. All rights reserved.
 
 object_condensation: Efficient implementations of the Object Condensation losses (Jan Kieseler, 2020)
 """
