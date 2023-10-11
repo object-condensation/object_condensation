@@ -25,3 +25,13 @@
 [rtd-link]:                 https://object_condensation.readthedocs.io/en/latest/?badge=latest
 
 <!-- prettier-ignore-end -->
+
+The Object Condensation loss - [developed by Jan Kieseler](https://arxiv.org/abs/2002.03605) - is now being used by several groups in high energy physics for both track reconstruction and shower reconstruction in calorimeters. 
+
+Several implementations of this idea already exist, but often they are maintained by very few people. This repository aims to provide an easy to use imlementation for both the TensorFlow and PyTorch backend.  
+
+Existing Implementations: 
+
+* [cms-pepr](https://github.com/cms-pepr/HGCalML) [TensorFlow]
+* [mlpf](https://github.com/selvaggi/mlpf/blob/main/README.md) [PyTorch]
+* [gnn-tracking](https://github.com/gnn-tracking/gnn_tracking/tree/main) [PyTorch]
