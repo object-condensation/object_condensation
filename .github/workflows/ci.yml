@@ -58,7 +58,7 @@ jobs:
           allow-prereleases: true
 
       - name: Install package
-        run: python -m pip install .[test]
+        run: python -m pip install .[test,pytorch,tensorflow]
 
       - name: Test package
         run: >-
