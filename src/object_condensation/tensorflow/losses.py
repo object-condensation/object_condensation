@@ -10,23 +10,29 @@ def calculate_losses(
     beta: tf.Tensor,
     x: tf.Tensor,
     weights: tf.Tensor = None,
-    noise_threshold: int = -1,
+    noise_threshold: int = 0,
 ) -> dict[str, tf.Tensor]:
     """
     Calculate the object condensation loss
     """
     if weights is None:
         weights = tf.ones_like(beta)
+    q_min = tf.cast(q_min, tf.float32)
+    object_id = tf.reshape(object_id, (-1,))
+    beta = tf.cast(beta, tf.float32)
+    x = tf.cast(x, tf.float32)
+    weights = tf.cast(weights, tf.float32)
 
     not_noise = object_id > noise_threshold
     unique_oids, _ = tf.unique(object_id[not_noise])
-    q = tf.tanh(beta) ** 2 + q_min
+    q = tf.cast(tf.math.atanh(beta) ** 2 + q_min, tf.float32)
     mask_att = tf.cast(object_id[:, None] == unique_oids[None, :], tf.float32)
     mask_rep = tf.cast(object_id[:, None] != unique_oids[None, :], tf.float32)
     alphas = tf.argmax(beta * mask_att, axis=0)
     beta_k = tf.gather(beta, alphas)
     q_k = tf.gather(q, alphas)
     x_k = tf.gather(x, alphas)
+
     dist_j_k = tf.norm(x[None, :, :] - x_k[:, None, :], axis=-1)
 
     v_att_k = tf.math.divide_no_nan(
