@@ -32,10 +32,14 @@ class TorchCondensationMockData:
         )
 
 
+def tensor_to_python(dct: dict[str, T]):
+    return {k: v.item() for k, v in dct.items()}
+
+
 @pytest.mark.parametrize(("data", "expected"), test_cases)
 def test_condensation_loss(data: CondensationMockData, expected: dict[str, float]):
     data = TorchCondensationMockData.from_numpy(data)
-    assert (
+    assert tensor_to_python(
         condensation_loss(
             beta=data.beta.squeeze(),
             x=data.x,
@@ -43,6 +47,6 @@ def test_condensation_loss(data: CondensationMockData, expected: dict[str, float
             mask=data.weights.squeeze().bool(),
             q_min=data.q_min,
             radius_threshold=data.radius_threshold,
+            noise_thld=0,
         )
-        == expected.item()
-    )
+    ) == pytest.approx(expected)

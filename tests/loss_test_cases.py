@@ -31,4 +31,14 @@ def generate_test_data(
     )
 
 
-test_cases = list[tuple[CondensationMockData, dict[str, float]]]()
+test_cases: list[tuple[CondensationMockData, dict[str, float]]] = [
+    (
+        generate_test_data(),
+        {
+            "attractive": 1.7951122042912249,
+            "repulsive": 1.9508766539017457,
+            "coward": 0.2156792078639991,
+            "noise": 0.77484477845007,
+        },
+    )
+]

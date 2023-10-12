@@ -6,7 +6,7 @@ import pytest
 import tensorflow as tf
 from tensorflow import Tensor as T
 
-from object_condensation.pytorch.losses import condensation_loss
+from object_condensation.tensorflow.losses import calculate_losses
 
 from .loss_test_cases import CondensationMockData, test_cases
 
@@ -32,16 +32,20 @@ class TFCondensationMockData:
         )
 
 
+def tensor_to_python(dct: dict[str, T]):
+    return {k: v.numpy().item() for k, v in dct.items()}
+
+
 @pytest.mark.parametrize(("data", "expected"), test_cases)
 def test_condensation_loss(data: CondensationMockData, expected: dict[str, float]):
     data = TFCondensationMockData.from_numpy(data)
-    assert (
-        condensation_loss(
+    assert tensor_to_python(
+        calculate_losses(
             beta=data.beta,
             x=data.x,
             object_id=data.object_id,
-            mask=data.weights,
+            weights=data.weights,
             q_min=data.q_min,
+            noise_threshold=0,
         )
-        == expected.item()
-    )
+    ) == pytest.approx(expected)

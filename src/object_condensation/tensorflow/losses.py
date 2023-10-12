@@ -78,8 +78,8 @@ def calculate_losses(
     )
 
     return {
-        "v_att": v_att,
-        "v_rep": v_rep,
-        "L_beta": coward_loss,
-        "L_noise": noise_loss,
+        "attractive": v_att,
+        "repulsive": v_rep,
+        "coward": coward_loss,
+        "noise": noise_loss,
     }
