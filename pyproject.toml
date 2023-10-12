@@ -52,7 +52,7 @@ tensorflow = [
   "tensorflow>=2.0",
 ]
 pytorch = [
-  "pytorch>=1.0",
+  "torch>=1.0",
 ]
 
 [project.urls]
