@@ -37,10 +37,10 @@ def test_condensation_loss(data: CondensationMockData, expected: dict[str, float
     data = TorchCondensationMockData.from_numpy(data)
     assert (
         condensation_loss(
-            beta=data.beta,
+            beta=data.beta.squeeze(),
             x=data.x,
-            object_id=data.object_id,
-            mask=data.weights,
+            object_id=data.object_id.squeeze(),
+            mask=data.weights.squeeze().bool(),
             q_min=data.q_min,
             radius_threshold=data.radius_threshold,
         )

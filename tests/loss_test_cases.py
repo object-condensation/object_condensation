@@ -22,12 +22,12 @@ def generate_test_data(
     if rng is None:
         rng = np.random.default_rng(seed=0)
     return CondensationMockData(
-        beta=rng.random(n_hits),
+        beta=rng.random((n_hits, 1)),
         x=rng.random((n_hits, n_cluster_coords)),
-        object_id=rng.choice(np.arange(n_objects), size=n_hits),
+        object_id=rng.choice(np.arange(n_objects), size=n_hits).reshape(-1, 1),
         q_min=1.0,
         radius_threshold=1.0,
-        weights=np.ones(n_hits),
+        weights=np.ones((n_hits, 1)),
     )
 
 
