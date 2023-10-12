@@ -2,6 +2,65 @@ from __future__ import annotations
 
 import tensorflow as tf
 
+def calculate_losses(self, vertex_ids, beta, ccoords):
+    object_ids, _ = tf.unique(vertex_ids)
+    q = tf.tanh(beta) ** 2 + self.q_min
+    M = tf.cast(vertex_ids[:, None] == object_ids[None, :], tf.float32)
+    Mnot = tf.cast(vertex_ids[:, None] != object_ids[None, :], tf.float32)
+    cond_points = tf.argmax(beta * M, axis=0)
+    beta_k = tf.gather(beta, cond_points)
+    q_k = tf.gather(q, cond_points)
+    x_k = tf.gather(ccoords, cond_points)
+    d_j_k = tf.norm(ccoords[None, :, :] - x_k[:, None, :], axis=-1)
+
+    V_att_k = tf.math.divide_no_nan(
+        tf.reduce_sum(
+            q_k[
+                :,
+            ] * tf.transpose(
+                beta
+            ) * tf.transpose(M) * d_j_k**2,
+            axis=1,
+        ),
+        tf.reduce_sum(M, axis=0) + 1e-3,
+    )
+
+    V_rep_k = tf.math.divide_no_nan(
+        tf.reduce_sum(
+            q_k[:,]
+            * tf.transpose(beta)
+            * tf.transpose(Mnot)
+            * tf.math.maximum(0, 1.0 - d_j_k),
+            axis=1,
+        ),
+        tf.reduce_sum(Mnot, axis=0) + 1e-3,
+    )
+
+    L_beta_k = 1.0 - beta_k
+
+    V_att = tf.divide_no_nan(
+        V_att_k, tf.cast(tf.shape(object_ids)[0] - 1.0, tf.float32)
+    )
+
+    V_rep = tf.divide_no_nan(
+        V_rep_k, tf.cast(tf.shape(object_ids)[0] - 1.0, tf.float32)
+    )
+
+    L_beta = tf.divide_no_nan(
+        tf.reduce_sum(L_beta_k), tf.cast(tf.shape(object_ids)[0] - 1.0, tf.float32)
+    )
+
+    L_noise = tf.math.divide_no_nan(
+        tf.reduce_sum(beta[vertex_ids == -1]),
+        tf.reduce_sum(tf.cast(vertex_ids == -1, tf.float32)),
+    )
+
+    return {
+        "V_att": V_att,
+        "V_rep": V_rep,
+        "L_beta": L_beta,
+        "L_noise": L_noise,
+    }
 
 class ObjectCondensation(tf.keras.layers.Layer):
     """ """
