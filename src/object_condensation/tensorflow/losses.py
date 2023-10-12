@@ -44,10 +44,10 @@ def calculate_losses(
             * dist_j_k**2,
             axis=1,
         ),
-        tf.reduce_sum(mask_att, axis=0) + 1e-3,
+        tf.reduce_sum(mask_att, axis=0) + 1e-9,
     )
     v_att = tf.math.divide_no_nan(
-        tf.reduce_sum(v_att_k), tf.cast(tf.shape(unique_oids)[0] - 1, tf.float32)
+        tf.reduce_sum(v_att_k), tf.cast(tf.shape(unique_oids)[0], tf.float32)
     )
 
     v_rep_k = tf.math.divide_no_nan(
@@ -59,27 +59,27 @@ def calculate_losses(
             * tf.math.maximum(0, 1.0 - dist_j_k),
             axis=1,
         ),
-        tf.reduce_sum(mask_rep, axis=0) + 1e-3,
+        tf.reduce_sum(mask_rep, axis=0) + 1e-9,
     )
 
     v_rep = tf.math.divide_no_nan(
-        tf.reduce_sum(v_rep_k), tf.cast(tf.shape(unique_oids)[0] - 1, tf.float32)
+        tf.reduce_sum(v_rep_k), tf.cast(tf.shape(unique_oids)[0], tf.float32)
     )
 
-    noise_loss_k = 1.0 - beta_k
-    noise_loss = tf.math.divide_no_nan(
-        tf.reduce_sum(noise_loss_k[1:]),
-        tf.cast(tf.shape(unique_oids)[0] - 1, tf.float32),
-    )
-
+    coward_loss_k = 1.0 - beta_k
     coward_loss = tf.math.divide_no_nan(
-        tf.reduce_sum(beta[object_id == -1]),
-        tf.reduce_sum(tf.cast(object_id == -1, tf.float32)),
+        tf.reduce_sum(coward_loss_k),
+        tf.cast(tf.shape(unique_oids)[0], tf.float32),
+    )
+
+    noise_loss = tf.math.divide_no_nan(
+        tf.reduce_sum(beta[object_id <= noise_threshold]),
+        tf.reduce_sum(tf.cast(object_id <= noise_threshold, tf.float32)),
     )
 
     return {
         "v_att": v_att,
         "v_rep": v_rep,
-        "L_beta": noise_loss,
-        "L_noise": coward_loss,
+        "L_beta": coward_loss,
+        "L_noise": noise_loss,
     }
