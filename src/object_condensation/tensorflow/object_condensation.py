@@ -3,7 +3,16 @@ from __future__ import annotations
 import tensorflow as tf
 
 
-def calculate_losses(q_min, object_id, beta, x, weights=None, noise_threshold=-1):
+def calculate_losses(
+        q_min: float,
+        object_id: tf.Tensor,
+        beta: tf.Tensor,
+        x: tf.Tensor,
+        weights: tf.Tensor=None,
+        noise_threshold: int=-1) -> dict[str, tf.Tensor]:
+    """
+    Calculate the object condensation loss
+    """
     if weights is None:
         weights = tf.ones_like(beta)
 
@@ -20,8 +29,13 @@ def calculate_losses(q_min, object_id, beta, x, weights=None, noise_threshold=-1
 
     v_att_k = tf.math.divide_no_nan(
         tf.reduce_sum(
-            q_k * tf.transpose(weights) * tf.transpose(q) * tf.transpose(mask_att) * dist_j_k**2,
-            axis=1),
+            q_k
+            * tf.transpose(weights)
+            * tf.transpose(q)
+            * tf.transpose(mask_att)
+            * dist_j_k**2,
+            axis=1,
+        ),
         tf.reduce_sum(mask_att, axis=0) + 1e-3,
     )
     v_att = tf.divide_no_nan(
@@ -46,7 +60,8 @@ def calculate_losses(q_min, object_id, beta, x, weights=None, noise_threshold=-1
 
     noise_loss_k = 1.0 - beta_k
     noise_loss = tf.divide_no_nan(
-        tf.reduce_sum(noise_loss_k[1:]), tf.cast(tf.shape(unique_oids)[0] - 1.0, tf.float32)
+        tf.reduce_sum(noise_loss_k[1:]),
+        tf.cast(tf.shape(unique_oids)[0] - 1.0, tf.float32),
     )
 
     coward_loss = tf.math.divide_no_nan(
