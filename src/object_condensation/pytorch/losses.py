@@ -41,6 +41,9 @@ def condensation_loss(
         ``cl_peak``: Averaged over all objects
         ``cl_noise``: Averaged over all noise hits
     """
+    # To protect against nan in divisions
+    eps = 1e-9
+
     # x: n_nodes x n_outdim
     not_noise = object_id > noise_thld
     unique_oids = torch.unique(object_id[not_noise])
@@ -71,8 +74,8 @@ def condensation_loss(
     # It's important to directly do the .mean here so we don't keep these large
     # matrices in memory longer than we need them
     # Attractive potential per object normalized over number of hits in object
-    v_att_k = torch.sum(v_att_j_k[mask], dim=0) / torch.sum(
-        attractive_mask[mask], dim=0
+    v_att_k = torch.sum(v_att_j_k[mask], dim=0) / (
+        torch.sum(attractive_mask[mask], dim=0) + eps
     )
     v_att = torch.mean(v_att_k)
 
@@ -80,15 +83,15 @@ def condensation_loss(
     v_rep_j_k = (
         q[:, None] * q_k * (~attractive_mask) * relu(radius_threshold - dist_j_k)
     )
-    v_rep_k = torch.sum(v_rep_j_k, dim=0) / torch.sum(~attractive_mask, dim=0)
+    v_rep_k = torch.sum(v_rep_j_k, dim=0) / (torch.sum(~attractive_mask, dim=0) + eps)
     v_rep = torch.mean(v_rep_k)
 
-    l_beta = torch.mean(1 - beta[alphas])
+    l_coward = torch.mean(1 - beta[alphas])
     l_noise = torch.mean(beta[~not_noise])
 
     return {
         "attractive": v_att,
         "repulsive": v_rep,
-        "peak": l_beta,
+        "coward": l_coward,
         "noise": l_noise,
     }
