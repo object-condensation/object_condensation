@@ -27,6 +27,7 @@ repos:
       - id: mixed-line-ending
       - id: name-tests-test
         args: ["--pytest-test-first"]
+        exclude: "loss_test_cases"
       - id: requirements-txt-fixer
       - id: trailing-whitespace
 

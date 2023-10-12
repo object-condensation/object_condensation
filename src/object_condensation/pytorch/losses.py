@@ -7,7 +7,7 @@ from torch.nn.functional import relu
 
 # todo: Replace mask with weight and also check how it should factor in repulsive/
 #   background losses
-@torch.compile
+# @torch.compile
 def condensation_loss(
     *,
     beta: T,
