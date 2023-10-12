@@ -16,6 +16,7 @@ def condensation_loss(
     mask: T,
     q_min: float,
     radius_threshold: float,
+    noise_thld: int,
 ) -> dict[str, T]:
     """Condensation losses
 
@@ -29,6 +30,8 @@ def condensation_loss(
         radius_threshold: Radius threshold for repulsive potential. In case of linear
             scarlarization of the multi objective losses, this is redundant and should
             be fixed to 1.
+        noise_thld: Threshold for noise hits. Hits with ``object_id <= noise_thld``
+            are considered to be noise
 
     Returns:
         Dictionary of scalar tensors.
@@ -39,7 +42,7 @@ def condensation_loss(
         ``cl_noise``: Averaged over all noise hits
     """
     # x: n_nodes x n_outdim
-    not_noise = object_id > 0
+    not_noise = object_id > noise_thld
     unique_oids = torch.unique(object_id[not_noise])
     assert len(unique_oids) > 0, "No particles found, cannot evaluate loss"
     # n_nodes x n_pids
@@ -49,33 +52,43 @@ def condensation_loss(
 
     q = torch.arctanh(beta) ** 2 + q_min
     assert not torch.isnan(q).any(), "q contains NaNs"
+    # n_objs
     alphas = torch.argmax(q[:, None] * attractive_mask, dim=0)
 
-    # n_pids x n_outdim
-    x_alphas = x[alphas]
-    # 1 x n_pids
-    q_alphas = q[alphas][None, :]
+    # _j means indexed by hits
+    # _k means indexed by objects
 
-    # n_nodes x n_pids
-    dist = torch.cdist(x, x_alphas)
+    # n_objs x n_outdim
+    x_k = x[alphas]
+    # 1 x n_objs
+    q_k = q[alphas][None, :]
 
+    dist_j_k = torch.cdist(x, x_k)
+
+    # Attractive potential/loss
+    # todo: do I need the copy/new axis here or would it broadcast?
+    v_att_j_k = q[:, None] * q_k * attractive_mask * torch.square(dist_j_k)
     # It's important to directly do the .mean here so we don't keep these large
     # matrices in memory longer than we need them
-    # Attractive potential (n_nodes x n_pids)
-    va_matrix = q[:, None] * q_alphas * attractive_mask * torch.square(dist)
-    va = torch.mean(torch.mean(va_matrix[mask], dim=0))
-    # Repulsive potential (n_nodes x n_pids)
-    vr_matrix = (
-        q[:, None] * q_alphas * (~attractive_mask) * relu(radius_threshold - dist)
+    # Attractive potential per object normalized over number of hits in object
+    v_att_k = torch.sum(v_att_j_k[mask], dim=0) / torch.sum(
+        attractive_mask[mask], dim=0
     )
-    vr = torch.mean(torch.mean(vr_matrix, dim=0))
+    v_att = torch.mean(v_att_k)
 
-    peak = torch.mean(1 - beta[alphas])
-    noise = torch.mean(beta[~not_noise])
+    # Repulsive potential/loss
+    v_rep_j_k = (
+        q[:, None] * q_k * (~attractive_mask) * relu(radius_threshold - dist_j_k)
+    )
+    v_rep_k = torch.sum(v_rep_j_k, dim=0) / torch.sum(~attractive_mask, dim=0)
+    v_rep = torch.mean(v_rep_k)
+
+    l_beta = torch.mean(1 - beta[alphas])
+    l_noise = torch.mean(beta[~not_noise])
 
     return {
-        "attractive": va,
-        "repulsive": vr,
-        "peak": peak,
-        "noise": noise,
+        "attractive": v_att,
+        "repulsive": v_rep,
+        "peak": l_beta,
+        "noise": l_noise,
     }
