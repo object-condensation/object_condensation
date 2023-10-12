@@ -39,8 +39,8 @@ def calculate_losses(
         ),
         tf.reduce_sum(mask_att, axis=0) + 1e-3,
     )
-    v_att = tf.divide_no_nan(
-        tf.reduce_sum(v_att_k), tf.cast(tf.shape(unique_oids)[0] - 1.0, tf.float32)
+    v_att = tf.math.divide_no_nan(
+        tf.reduce_sum(v_att_k), tf.cast(tf.shape(unique_oids)[0] - 1, tf.float32)
     )
 
     v_rep_k = tf.math.divide_no_nan(
@@ -55,14 +55,14 @@ def calculate_losses(
         tf.reduce_sum(mask_rep, axis=0) + 1e-3,
     )
 
-    v_rep = tf.divide_no_nan(
-        tf.reduce_sum(v_rep_k), tf.cast(tf.shape(unique_oids)[0] - 1.0, tf.float32)
+    v_rep = tf.math.divide_no_nan(
+        tf.reduce_sum(v_rep_k), tf.cast(tf.shape(unique_oids)[0] - 1, tf.float32)
     )
 
     noise_loss_k = 1.0 - beta_k
-    noise_loss = tf.divide_no_nan(
+    noise_loss = tf.math.divide_no_nan(
         tf.reduce_sum(noise_loss_k[1:]),
-        tf.cast(tf.shape(unique_oids)[0] - 1.0, tf.float32),
+        tf.cast(tf.shape(unique_oids)[0] - 1, tf.float32),
     )
 
     coward_loss = tf.math.divide_no_nan(
