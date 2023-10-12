@@ -4,6 +4,7 @@ import tensorflow as tf
 
 
 def calculate_losses(
+    *,
     q_min: float,
     object_id: tf.Tensor,
     beta: tf.Tensor,
