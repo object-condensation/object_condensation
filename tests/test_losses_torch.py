@@ -7,7 +7,8 @@ import torch
 from torch import Tensor as T
 
 from object_condensation.pytorch.losses import condensation_loss
-from tests.loss_test_cases import CondensationMockData, test_cases
+
+from .loss_test_cases import CondensationMockData, test_cases
 
 
 @dataclass
