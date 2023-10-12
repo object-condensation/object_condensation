@@ -4,12 +4,13 @@ import tensorflow as tf
 
 
 def calculate_losses(
-        q_min: float,
-        object_id: tf.Tensor,
-        beta: tf.Tensor,
-        x: tf.Tensor,
-        weights: tf.Tensor=None,
-        noise_threshold: int=-1) -> dict[str, tf.Tensor]:
+    q_min: float,
+    object_id: tf.Tensor,
+    beta: tf.Tensor,
+    x: tf.Tensor,
+    weights: tf.Tensor = None,
+    noise_threshold: int = -1,
+) -> dict[str, tf.Tensor]:
     """
     Calculate the object condensation loss
     """
