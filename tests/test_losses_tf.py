@@ -2,9 +2,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+import pytest
 import tensorflow as tf
-from loss_test_cases import CondensationMockData
 from tensorflow import Tensor as T
+
+from object_condensation.pytorch.losses import condensation_loss
+
+from .loss_test_cases import CondensationMockData, test_cases
 
 
 @dataclass
@@ -26,3 +30,18 @@ class TFCondensationMockData:
             q_min=data.q_min,
             radius_threshold=data.radius_threshold,
         )
+
+
+@pytest.mark.parametrize(("data", "expected"), test_cases)
+def test_condensation_loss(data: CondensationMockData, expected: dict[str, float]):
+    data = TFCondensationMockData.from_numpy(data)
+    assert (
+        condensation_loss(
+            beta=data.beta,
+            x=data.x,
+            object_id=data.object_id,
+            mask=data.weights,
+            q_min=data.q_min,
+        )
+        == expected.item()
+    )
