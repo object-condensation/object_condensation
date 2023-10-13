@@ -42,7 +42,7 @@ def test_condensation_loss(data: CondensationMockData, expected: dict[str, float
             beta=data.beta.squeeze(),
             x=data.x,
             object_id=data.object_id.squeeze(),
-            mask=data.weights.squeeze().bool(),
+            weights=data.weights.squeeze(),
             q_min=data.q_min,
             noise_threshold=0,
         )

@@ -19,7 +19,7 @@ def condensation_loss(
         x: Clustering coordinates
         object_id: Labels for objects. Objects with `object_id <= 0` are considered
             noise
-        mask: Mask for attractive loss, e.g., to only attract hits for
+        weights: Weights per hit, multiplied to attractive/repulsive potentials
         q_min: Minimal charge
         noise_threshold: Threshold for noise hits. Hits with ``object_id <= noise_thld``
             are considered to be noise
