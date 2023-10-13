@@ -3,7 +3,7 @@ from __future__ import annotations
 import tensorflow as tf
 
 
-def calculate_losses(
+def condensation_loss(
     *,
     q_min: float,
     object_id: tf.Tensor,

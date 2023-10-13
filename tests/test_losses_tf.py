@@ -6,7 +6,7 @@ import pytest
 import tensorflow as tf
 from tensorflow import Tensor as T
 
-from object_condensation.tensorflow.losses import calculate_losses
+from object_condensation.tensorflow.losses import condensation_loss
 
 from .loss_test_cases import CondensationMockData, test_cases
 
@@ -40,7 +40,7 @@ def tensor_to_python(dct: dict[str, T]):
 def test_condensation_loss(data: CondensationMockData, expected: dict[str, float]):
     data = TFCondensationMockData.from_numpy(data)
     assert tensor_to_python(
-        calculate_losses(
+        condensation_loss(
             beta=data.beta,
             x=data.x,
             object_id=data.object_id,
