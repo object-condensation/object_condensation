@@ -15,7 +15,7 @@ def condensation_loss(
     object_id: T,
     mask: T,
     q_min: float,
-    noise_thld: int,
+    noise_threshold: int,
 ) -> dict[str, T]:
     """Condensation losses
 
@@ -26,7 +26,7 @@ def condensation_loss(
             noise
         mask: Mask for attractive loss, e.g., to only attract hits for
         q_min: Minimal charge
-        noise_thld: Threshold for noise hits. Hits with ``object_id <= noise_thld``
+        noise_threshold: Threshold for noise hits. Hits with ``object_id <= noise_thld``
             are considered to be noise
 
     Returns:
@@ -41,7 +41,7 @@ def condensation_loss(
     eps = 1e-9
 
     # x: n_nodes x n_outdim
-    not_noise = object_id > noise_thld
+    not_noise = object_id > noise_threshold
     unique_oids = torch.unique(object_id[not_noise])
     assert len(unique_oids) > 0, "No particles found, cannot evaluate loss"
     # n_nodes x n_pids
