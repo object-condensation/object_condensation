@@ -18,7 +18,6 @@ class TorchCondensationMockData:
     object_id: T
     weights: T
     q_min: float
-    radius_threshold: float
 
     @classmethod
     def from_numpy(cls, data: CondensationMockData) -> TorchCondensationMockData:
@@ -28,7 +27,6 @@ class TorchCondensationMockData:
             object_id=torch.from_numpy(data.object_id),
             weights=torch.from_numpy(data.weights),
             q_min=data.q_min,
-            radius_threshold=data.radius_threshold,
         )
 
 
@@ -46,7 +44,6 @@ def test_condensation_loss(data: CondensationMockData, expected: dict[str, float
             object_id=data.object_id.squeeze(),
             mask=data.weights.squeeze().bool(),
             q_min=data.q_min,
-            radius_threshold=data.radius_threshold,
             noise_thld=0,
         )
     ) == pytest.approx(expected)

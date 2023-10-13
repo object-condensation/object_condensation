@@ -15,7 +15,6 @@ def condensation_loss(
     object_id: T,
     mask: T,
     q_min: float,
-    radius_threshold: float,
     noise_thld: int,
 ) -> dict[str, T]:
     """Condensation losses
@@ -27,9 +26,6 @@ def condensation_loss(
             noise
         mask: Mask for attractive loss, e.g., to only attract hits for
         q_min: Minimal charge
-        radius_threshold: Radius threshold for repulsive potential. In case of linear
-            scarlarization of the multi objective losses, this is redundant and should
-            be fixed to 1.
         noise_thld: Threshold for noise hits. Hits with ``object_id <= noise_thld``
             are considered to be noise
 
@@ -80,9 +76,7 @@ def condensation_loss(
     v_att = torch.mean(v_att_k)
 
     # Repulsive potential/loss
-    v_rep_j_k = (
-        q[:, None] * q_k * (~attractive_mask) * relu(radius_threshold - dist_j_k)
-    )
+    v_rep_j_k = q[:, None] * q_k * (~attractive_mask) * relu(1 - dist_j_k)
     v_rep_k = torch.sum(v_rep_j_k, dim=0) / (torch.sum(~attractive_mask, dim=0) + eps)
     v_rep = torch.mean(v_rep_k)
 

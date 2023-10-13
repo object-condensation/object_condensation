@@ -13,7 +13,6 @@ class CondensationMockData:
     object_id: A
     weights: A
     q_min: float
-    radius_threshold: float
 
 
 def generate_test_data(
@@ -26,7 +25,6 @@ def generate_test_data(
         x=rng.random((n_hits, n_cluster_coords)),
         object_id=rng.choice(np.arange(n_objects), size=n_hits).reshape(-1, 1),
         q_min=1.0,
-        radius_threshold=1.0,
         weights=np.ones((n_hits, 1)),
     )
 
