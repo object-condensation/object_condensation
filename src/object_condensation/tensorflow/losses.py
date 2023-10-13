@@ -12,8 +12,25 @@ def condensation_loss(
     weights: tf.Tensor = None,
     noise_threshold: int = 0,
 ) -> dict[str, tf.Tensor]:
-    """
-    Calculate the object condensation loss
+    """Condensation losses
+
+    Args:
+        beta: Condensation likelihoods
+        x: Clustering coordinates
+        object_id: Labels for objects. Objects with `object_id <= 0` are considered
+            noise
+        mask: Mask for attractive loss, e.g., to only attract hits for
+        q_min: Minimal charge
+        noise_threshold: Threshold for noise hits. Hits with ``object_id <= noise_thld``
+            are considered to be noise
+
+    Returns:
+        Dictionary of scalar tensors.
+
+        ``attractive``: Averaged over object, then averaged over all objects.
+        ``repulsive``: Averaged like ``attractive``
+        ``cl_peak``: Averaged over all objects
+        ``cl_noise``: Averaged over all noise hits
     """
     if weights is None:
         weights = tf.ones_like(beta)
