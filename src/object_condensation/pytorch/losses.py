@@ -13,7 +13,7 @@ def condensation_loss(
     beta: T,
     x: T,
     object_id: T,
-    mask: T,
+    weights: T,
     q_min: float,
     noise_threshold: int,
 ) -> dict[str, T]:
@@ -24,7 +24,7 @@ def condensation_loss(
         x: Clustering coordinates
         object_id: Labels for objects. Objects with `object_id <= 0` are considered
             noise
-        mask: Mask for attractive loss, e.g., to only attract hits for
+        weights: Weights per hit, multiplied to attractive/repulsive potentials
         q_min: Minimal charge
         noise_threshold: Threshold for noise hits. Hits with ``object_id <= noise_thld``
             are considered to be noise
@@ -66,17 +66,19 @@ def condensation_loss(
 
     # Attractive potential/loss
     # todo: do I need the copy/new axis here or would it broadcast?
-    v_att_j_k = q[:, None] * q_k * attractive_mask * torch.square(dist_j_k)
+    v_att_j_k = (
+        weights[:, None] * q[:, None] * q_k * attractive_mask * torch.square(dist_j_k)
+    )
     # It's important to directly do the .mean here so we don't keep these large
     # matrices in memory longer than we need them
     # Attractive potential per object normalized over number of hits in object
-    v_att_k = torch.sum(v_att_j_k[mask], dim=0) / (
-        torch.sum(attractive_mask[mask], dim=0) + eps
-    )
+    v_att_k = torch.sum(v_att_j_k, dim=0) / (torch.sum(attractive_mask, dim=0) + eps)
     v_att = torch.mean(v_att_k)
 
     # Repulsive potential/loss
-    v_rep_j_k = q[:, None] * q_k * (~attractive_mask) * relu(1 - dist_j_k)
+    v_rep_j_k = (
+        weights[:, None] * q[:, None] * q_k * (~attractive_mask) * relu(1 - dist_j_k)
+    )
     v_rep_k = torch.sum(v_rep_j_k, dim=0) / (torch.sum(~attractive_mask, dim=0) + eps)
     v_rep = torch.mean(v_rep_k)
 
