@@ -18,7 +18,6 @@ class TFCondensationMockData:
     object_id: T
     weights: T
     q_min: float
-    radius_threshold: float
 
     @classmethod
     def from_numpy(cls, data: CondensationMockData) -> TFCondensationMockData:
@@ -28,7 +27,6 @@ class TFCondensationMockData:
             object_id=tf.convert_to_tensor(data.object_id),
             weights=tf.convert_to_tensor(data.weights),
             q_min=data.q_min,
-            radius_threshold=data.radius_threshold,
         )
 
 
