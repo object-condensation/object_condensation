@@ -29,8 +29,8 @@ def condensation_loss(
 
         ``attractive``: Averaged over object, then averaged over all objects.
         ``repulsive``: Averaged like ``attractive``
-        ``cl_peak``: Averaged over all objects
-        ``cl_noise``: Averaged over all noise hits
+        ``coward``: Averaged over all objects
+        ``noise``: Averaged over all noise hits
     """
     if weights is None:
         weights = tf.ones_like(beta)
