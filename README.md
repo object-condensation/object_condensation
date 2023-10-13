@@ -4,7 +4,6 @@
 [![Documentation Status][rtd-badge]][rtd-link]
 
 [![PyPI version][pypi-version]][pypi-link]
-[![Conda-Forge][conda-badge]][conda-link]
 [![PyPI platforms][pypi-platforms]][pypi-link]
 
 [![GitHub Discussion][github-discussions-badge]][github-discussions-link]
@@ -14,8 +13,6 @@
 <!-- prettier-ignore-start -->
 [actions-badge]:            https://github.com/object-condensation/object_condensation/workflows/CI/badge.svg
 [actions-link]:             https://github.com/object-condensation/object_condensation/actions
-[conda-badge]:              https://img.shields.io/conda/vn/conda-forge/object_condensation
-[conda-link]:               https://github.com/conda-forge/object_condensation-feedstock
 [github-discussions-badge]: https://img.shields.io/static/v1?label=Discussions&message=Ask&color=blue&logo=github
 [github-discussions-link]:  https://github.com/object-condensation/object_condensation/discussions
 [pypi-link]:                https://pypi.org/project/object_condensation/
@@ -44,17 +41,16 @@ Existing Implementations:
 
 ## Installation
 
-Clone project and run
-
 ```bash
-python3 -m pip install -e '.[pytorch]'
+python3 -m pip install -e 'object_condensation[pytorch]'
 # or
-python3 -m pip install -e '.[tensorflow]'
+python3 -m pip install -e 'object_condensation[tensorflow]'
 ```
 
 ### Development setup
 
-For the development setup, also add `dev` and `testing`, e.g.,
+For the development setup, clone this repository and also add the `dev` and
+`testing` extra options, e.g.,
 
 ```bash
 python3 -m pip install -e '.[pytorch,dev,testing]'
