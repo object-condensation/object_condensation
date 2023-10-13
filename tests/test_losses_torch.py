@@ -44,6 +44,6 @@ def test_condensation_loss(data: CondensationMockData, expected: dict[str, float
             object_id=data.object_id.squeeze(),
             mask=data.weights.squeeze().bool(),
             q_min=data.q_min,
-            noise_thld=0,
+            noise_threshold=0,
         )
     ) == pytest.approx(expected)
