@@ -19,7 +19,7 @@
 [pypi-platforms]:           https://img.shields.io/pypi/pyversions/object_condensation
 [pypi-version]:             https://img.shields.io/pypi/v/object_condensation
 [rtd-badge]:                https://readthedocs.org/projects/object_condensation/badge/?version=latest
-[rtd-link]:                 https://object_condensation.readthedocs.io/en/latest/?badge=latest
+[rtd-link]:                 https://object-condensation.readthedocs.io/en/latest/?badge=latest
 
 <!-- prettier-ignore-end -->
 
