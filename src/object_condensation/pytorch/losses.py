@@ -13,9 +13,9 @@ def condensation_loss(
     beta: T,
     x: T,
     object_id: T,
-    weights: T,
+    weights: T = None,
     q_min: float,
-    noise_threshold: int,
+    noise_threshold: int = 0,
 ) -> dict[str, T]:
     """Condensation losses
 
@@ -31,6 +31,9 @@ def condensation_loss(
     Returns:
         Dictionary of scalar tensors; see readme.
     """
+    if weights is None:
+        weights = torch.ones_like(beta)
+
     # To protect against nan in divisions
     eps = 1e-9
 
@@ -87,7 +90,7 @@ def condensation_loss(
     }
 
 
-def condensation_loss_tiger(
+def _condensation_loss_tiger(
     *,
     beta: T,
     x: T,
@@ -97,22 +100,8 @@ def condensation_loss_tiger(
     noise_threshold: int,
     max_n_rep: int,
 ) -> dict[str, T]:
-    """Condensation losses
-
-    Args:
-        beta: Condensation likelihoods
-        x: Clustering coordinates
-        object_id: Labels for objects.
-        weights: Weights per hit, multiplied to attractive/repulsive potentials
-        q_min: Minimal charge
-        noise_threshold: Threshold for noise hits. Hits with ``object_id <= noise_thld``
-            are considered to be noise
-        max_n_rep: Maximum number of elements to consider for repulsive loss.
-            Set to 0 to disable.
-
-    Returns:
-        Dictionary of scalar tensors; see readme.
-        `n_rep`: Number of repulsive elements (before sampling).
+    """Extracted function for torch compilation. See `condensation_loss_tiger` for
+    docstring.
     """
     # To protect against nan in divisions
     eps = 1e-9
@@ -175,3 +164,49 @@ def condensation_loss_tiger(
         "noise": l_noise,
         "n_rep": n_rep,
     }
+
+
+def condensation_loss_tiger(
+    *,
+    beta: T,
+    x: T,
+    object_id: T,
+    weights: T | None = None,
+    q_min: float,
+    noise_threshold: int = 0,
+    max_n_rep: int = 0,
+    compile=False,
+) -> dict[str, T]:
+    """Condensation losses
+
+    Args:
+        beta: Condensation likelihoods
+        x: Clustering coordinates
+        object_id: Labels for objects.
+        weights: Weights per hit, multiplied to attractive/repulsive potentials
+        q_min: Minimal charge
+        noise_threshold: Threshold for noise hits. Hits with ``object_id <= noise_thld``
+            are considered to be noise
+        max_n_rep: Maximum number of elements to consider for repulsive loss.
+            Set to 0 to disable.
+        compile: Torch compile loss function. This is recommended, but might not work
+            in older pytorch version or in cutting edge python.
+
+    Returns:
+        Dictionary of scalar tensors; see readme.
+        `n_rep`: Number of repulsive elements (before sampling).
+    """
+    if weights is None:
+        weights = torch.ones_like(beta)
+    loss = _condensation_loss_tiger
+    if compile:
+        loss = torch.compile(_condensation_loss_tiger)
+    return loss(
+        beta=beta,
+        x=x,
+        object_id=object_id,
+        weights=weights,
+        q_min=q_min,
+        noise_threshold=noise_threshold,
+        max_n_rep=max_n_rep,
+    )
