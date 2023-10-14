@@ -6,7 +6,10 @@ import pytest
 import torch
 from torch import Tensor as T
 
-from object_condensation.pytorch.losses import condensation_loss
+from object_condensation.pytorch.losses import (
+    condensation_loss,
+    condensation_loss_tiger,
+)
 
 from .loss_test_cases import CondensationMockData, test_cases
 
@@ -47,3 +50,23 @@ def test_condensation_loss(data: CondensationMockData, expected: dict[str, float
             noise_threshold=0,
         )
     ) == pytest.approx(expected)
+
+
+@pytest.mark.parametrize(("data", "expected"), test_cases)
+def test_condensation_loss_tiger(
+    data: CondensationMockData, expected: dict[str, float]
+):
+    data = TorchCondensationMockData.from_numpy(data)
+    result = tensor_to_python(
+        condensation_loss_tiger(
+            beta=data.beta.squeeze(),
+            x=data.x,
+            object_id=data.object_id.squeeze(),
+            weights=data.weights.squeeze(),
+            q_min=data.q_min,
+            noise_threshold=0,
+            max_n_rep=1_000_000,
+        )
+    )
+    assert result.pop("n_rep") == 220768
+    assert result == pytest.approx(expected)
