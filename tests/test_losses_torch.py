@@ -69,7 +69,7 @@ def test_condensation_loss_tiger(
             q_min=data.q_min,
             noise_threshold=0,
             max_n_rep=1_000_000,
-            compile=compile,
+            torch_compile=compile,
         )
     )
     assert result.pop("n_rep") == 220768

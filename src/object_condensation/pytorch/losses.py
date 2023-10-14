@@ -175,7 +175,7 @@ def condensation_loss_tiger(
     q_min: float,
     noise_threshold: int = 0,
     max_n_rep: int = 0,
-    compile=False,
+    torch_compile=False,
 ) -> dict[str, T]:
     """Condensation losses
 
@@ -189,8 +189,8 @@ def condensation_loss_tiger(
             are considered to be noise
         max_n_rep: Maximum number of elements to consider for repulsive loss.
             Set to 0 to disable.
-        compile: Torch compile loss function. This is recommended, but might not work
-            in older pytorch version or in cutting edge python.
+        torch_compile: Torch compile loss function. This is recommended, but might not
+            work in older pytorch version or in cutting edge python.
 
     Returns:
         Dictionary of scalar tensors; see readme.
@@ -199,7 +199,7 @@ def condensation_loss_tiger(
     if weights is None:
         weights = torch.ones_like(beta)
     loss = _condensation_loss_tiger
-    if compile:
+    if torch_compile:
         loss = torch.compile(_condensation_loss_tiger)
     return loss(
         beta=beta,
