@@ -43,3 +43,5 @@ nitpick_ignore = [
 ]
 
 always_document_param_types = True
+
+autodoc_mock_imports = ["torch", "tensorflow"]
