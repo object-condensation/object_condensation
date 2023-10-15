@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import sys
 from dataclasses import dataclass
 
 import pytest
@@ -52,13 +53,21 @@ def test_condensation_loss(data: CondensationMockData, expected: dict[str, float
     ) == pytest.approx(expected)
 
 
-@pytest.mark.parametrize("compile", [(True,), (False,)])
+@pytest.mark.parametrize(
+    "compile",
+    [
+        (True,),
+        (False,),
+    ],
+)
 @pytest.mark.parametrize(("data", "expected"), test_cases)
 def test_condensation_loss_tiger(
     data: CondensationMockData,
     expected: dict[str, float],
     compile,
 ):
+    if compile and sys.platform.startswith("win"):
+        pytest.skip("torch.compile not supported on Windows")
     data = TorchCondensationMockData.from_numpy(data)
     result = tensor_to_python(
         condensation_loss_tiger(
