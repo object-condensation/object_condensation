@@ -10,7 +10,11 @@
 :start-after: <!-- SPHINX-START -->
 ```
 
-## PyTorch implementations
+```{include} benchmarks.md
+
+```
+
+## PyTorch API
 
 ```{eval-rst}
 .. automodule:: object_condensation.pytorch.losses
@@ -19,7 +23,7 @@
    :show-inheritance:
 ```
 
-## TensorFlow implementations
+## TensorFlow API
 
 ```{eval-rst}
 .. automodule:: object_condensation.tensorflow.losses
