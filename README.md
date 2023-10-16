@@ -62,6 +62,12 @@ pre-commit install  # in top-level directory of repository
 
 ## Implementations
 
+> **Note** For a comparison of the performance of the different implementations,
+> [see the docs][benchmark docs].
+
+[benchmark docs]:
+  https://object-condensation.readthedocs.io/en/latest/?badge=latest#benchmarks
+
 ### Default
 
 `condensation_loss` is a straightforward implementation that is easy to read and
