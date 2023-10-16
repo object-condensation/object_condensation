@@ -101,7 +101,7 @@ greatly increased memory consumption, possibly crashing the run. To counter
 this, an additional parameter `max_n_rep` is introduced. If the number of
 repulsive pairs (`rep_mask.sum()` in the example above) exceeds `max_n_rep`,
 then `rep_mask` will sample `max_n_rep` elements and upweight them by
-`n_rep/max_n_rep`. To check for this, `condensation_loss_tiger` will return
-`n_rep` in addition to the losses.
+`n_rep/max_n_rep`. To check whether this approximation is being used,
+`condensation_loss_tiger` will return `n_rep` in addition to the losses.
 
 - [pytorch API](https://object-condensation.readthedocs.io/en/latest/#object_condensation.pytorch.losses.condensation_loss_tiger)
