@@ -62,8 +62,11 @@ pre-commit install  # in top-level directory of repository
 
 ## Implementations
 
-> **Note** For a comparison of the performance of the different implementations,
+<!-- prettier-ignore-start -->
+> [!NOTE]
+> For a comparison of the performance of the different implementations,
 > [see the docs][benchmark docs].
+<!-- prettier-ignore-end -->
 
 [benchmark docs]:
   https://object-condensation.readthedocs.io/en/latest/?badge=latest#benchmarks
