@@ -1,4 +1,4 @@
-# object_condensation
+# Object Condensation Loss Functions and Utilities
 
 ```{toctree}
 :maxdepth: 2
