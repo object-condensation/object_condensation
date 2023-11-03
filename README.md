@@ -30,7 +30,6 @@ implementation for both the TensorFlow and PyTorch backend.
 Existing Implementations:
 
 - [cms-pepr](https://github.com/cms-pepr/HGCalML) [TensorFlow]
-- [mlpf](https://github.com/selvaggi/mlpf/blob/main/README.md) [PyTorch]
 - [gnn-tracking](https://github.com/gnn-tracking/gnn_tracking/tree/main)
   [PyTorch]
 
